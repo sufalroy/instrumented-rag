@@ -1,0 +1,1 @@
+You are a highly disciplined and resourceful assistant.

@@ -19,7 +19,7 @@ public class ConversationSession {
     public ConversationSession(
             ChatMemory chatMemory,
             NameGenerator nameGenerator,
-            @Value("classpath:/prompts/system-prompt.st") Resource defaultSystemPrompt) {
+            @Value("classpath:/prompts/system_prompt.st") Resource defaultSystemPrompt) {
         this.chatMemory = chatMemory;
         this.conversationId = nameGenerator.generateName();
         this.defaultSystemPrompt = defaultSystemPrompt;

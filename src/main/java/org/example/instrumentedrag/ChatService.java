@@ -7,21 +7,30 @@ import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.Executor;
+
 @Service
 public class ChatService {
     private final ChatModel primaryChatModel;
+    private final OllamaChatModel localChatModel;
     private final VectorStore vectorStore;
+    private final Executor executor;
 
     public ChatService(
             ChatModel primaryChatModel,
-            VectorStore vectorStore
+            OllamaChatModel localChatModel,
+            VectorStore vectorStore,
+            Executor executor
     ) {
         this.primaryChatModel = primaryChatModel;
+        this.localChatModel = localChatModel;
         this.vectorStore = vectorStore;
+        this.executor = executor;
     }
 
     public ChatResponse respondToUserMessage(ConversationSession conversationSession, String userMessage) {
@@ -39,6 +48,11 @@ public class ChatService {
                 .builder(this.primaryChatModel)
                 .defaultAdvisors(
                         new MessageChatMemoryAdvisor(conversationSession.getChatMemory()),
+                        new CaptureMemoryAdvisor(
+                                this.vectorStore,
+                                this.localChatModel,
+                                this.executor
+                        ),
                         new QuestionAnswerAdvisor(
                                 this.vectorStore,
                                 SearchRequest.defaults().withSimilarityThreshold(0.3d)
@@ -48,4 +62,5 @@ public class ChatService {
                 .defaultSystem(conversationSession.promptResource())
                 .build();
     }
+
 }

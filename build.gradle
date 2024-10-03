@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.springframework.ai:spring-ai-pdf-document-reader'
     implementation 'info.schnatterer.moby-names-generator:moby-names-generator:20.10.1-r0'
     implementation 'org.springframework.ai:spring-ai-qdrant-store-spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

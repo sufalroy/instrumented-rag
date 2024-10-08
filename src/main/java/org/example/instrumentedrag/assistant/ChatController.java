@@ -1,4 +1,4 @@
-package org.example.instrumentedrag;
+package org.example.instrumentedrag.assistant;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,10 +17,13 @@ public class ChatController {
         this.session = session;
     }
 
-    @PostMapping
+    @PostMapping("/{documentId}")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Object> chat(@Valid @RequestBody ConversationRequest request) {
-        var response = chatService.respondToUserMessage(session, request.message()).getResult()
+    public Map<String, Object> chat(
+            @Valid @RequestBody ConversationRequest request,
+            @PathVariable String documentId
+    ) {
+        var response = chatService.respondToUserMessage(session, request.message(), documentId).getResult()
                 .getOutput()
                 .getContent();
         return Map.of("message", response);

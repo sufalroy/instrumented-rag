@@ -1,5 +1,6 @@
-package org.example.instrumentedrag;
+package org.example.instrumentedrag.assistant;
 
+import lombok.Getter;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +13,9 @@ import java.util.List;
 @Component
 @SessionScope
 public class ConversationSession {
+    @Getter
     private final ChatMemory chatMemory;
+    @Getter
     private final String conversationId;
     private final Resource defaultSystemPrompt;
 
@@ -33,11 +36,4 @@ public class ConversationSession {
         return this.defaultSystemPrompt;
     }
 
-    public String getConversationId() {
-        return this.conversationId;
-    }
-
-    public ChatMemory getChatMemory() {
-        return this.chatMemory;
-    }
 }

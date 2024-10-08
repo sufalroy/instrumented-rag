@@ -1,4 +1,4 @@
-package org.example.instrumentedrag;
+package org.example.instrumentedrag.assistant;
 
 import jakarta.validation.constraints.NotBlank;
 

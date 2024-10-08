@@ -1,4 +1,4 @@
-package org.example.instrumentedrag;
+package org.example.instrumentedrag.assistant;
 
 public record MobyNameGenerator() implements NameGenerator {
     @Override

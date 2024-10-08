@@ -1,4 +1,4 @@
-package org.example.instrumentedrag;
+package org.example.instrumentedrag.assistant;
 
 import org.springframework.ai.chat.client.AdvisedRequest;
 import org.springframework.ai.chat.messages.Message;

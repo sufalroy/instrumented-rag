@@ -1,4 +1,4 @@
-package org.example.instrumentedrag;
+package org.example.instrumentedrag.assistant;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
@@ -10,9 +10,11 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Executor;
+
 
 @Service
 public class ChatService {
@@ -33,8 +35,12 @@ public class ChatService {
         this.executor = executor;
     }
 
-    public ChatResponse respondToUserMessage(ConversationSession conversationSession, String userMessage) {
-        return chatClientForSession(conversationSession)
+    public ChatResponse respondToUserMessage(
+            ConversationSession conversationSession,
+            String userMessage,
+            String documentId
+    ) {
+        return chatClientForSession(conversationSession, documentId)
                 .prompt()
                 .advisors(advisorBuilder -> advisorBuilder.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationSession.getConversationId()))
                 .advisors(advisorBuilder -> advisorBuilder.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, 50))
@@ -43,7 +49,7 @@ public class ChatService {
                 .chatResponse();
     }
 
-    private ChatClient chatClientForSession(ConversationSession conversationSession) {
+    private ChatClient chatClientForSession(ConversationSession conversationSession, String documentId) {
         return ChatClient
                 .builder(this.primaryChatModel)
                 .defaultAdvisors(
@@ -55,12 +61,16 @@ public class ChatService {
                         ),
                         new QuestionAnswerAdvisor(
                                 this.vectorStore,
-                                SearchRequest.defaults().withSimilarityThreshold(0.3d)
+                                SearchRequest.defaults()
+                                        .withTopK(3)
+                                        .withFilterExpression(new FilterExpressionBuilder()
+                                                .in("documentId", documentId)
+                                                .build())
                         ),
                         new SimpleLoggerAdvisor()
                 )
                 .defaultSystem(conversationSession.promptResource())
                 .build();
     }
-
 }
+

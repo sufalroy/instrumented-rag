@@ -6,12 +6,12 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.concurrent.Executor;
 
@@ -35,7 +35,7 @@ public class ChatService {
         this.executor = executor;
     }
 
-    public ChatResponse respondToUserMessage(
+    public Flux<String> respondToUserMessage(
             ConversationSession conversationSession,
             String userMessage,
             String documentId
@@ -45,8 +45,8 @@ public class ChatService {
                 .advisors(advisorBuilder -> advisorBuilder.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationSession.getConversationId()))
                 .advisors(advisorBuilder -> advisorBuilder.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, 50))
                 .user(userMessage)
-                .call()
-                .chatResponse();
+                .stream()
+                .content();
     }
 
     private ChatClient chatClientForSession(ConversationSession conversationSession, String documentId) {

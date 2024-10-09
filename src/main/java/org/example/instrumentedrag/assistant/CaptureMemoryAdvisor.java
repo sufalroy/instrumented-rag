@@ -59,7 +59,7 @@ public class CaptureMemoryAdvisor implements RequestResponseAdvisor {
     public AdvisedRequest adviseRequest(AdvisedRequest request, Map<String, Object> context) {
         executor.execute(() -> {
             try {
-                retryTemplate.execute((context1) -> extractMemoryIfPossible(request));
+                retryTemplate.execute((ctx) -> extractMemoryIfPossible(request));
             } catch (Throwable t) {
                 logger.error("Failed to extract memory after multiple attempts", t);
             }

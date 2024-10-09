@@ -1,13 +1,11 @@
 package org.example.instrumentedrag.assistant;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/api/assistant")
 public class ChatController {
     private final ChatService chatService;
     private final ConversationSession session;
@@ -17,15 +15,13 @@ public class ChatController {
         this.session = session;
     }
 
-    @PostMapping("/{documentId}")
+    @GetMapping("/{documentId}")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Object> chat(
-            @Valid @RequestBody ConversationRequest request,
-            @PathVariable String documentId
+    public Flux<String> chat(
+            @PathVariable String documentId,
+            @RequestParam(defaultValue = "please give a summary of the document") String message
+
     ) {
-        var response = chatService.respondToUserMessage(session, request.message(), documentId).getResult()
-                .getOutput()
-                .getContent();
-        return Map.of("message", response);
+        return this.chatService.respondToUserMessage(session, message, documentId);
     }
 }

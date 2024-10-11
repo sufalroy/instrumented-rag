@@ -1,7 +1,8 @@
-package org.example.instrumentedrag.assistant;
+package org.example.instrumentedrag.assistant.advisors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.example.instrumentedrag.assistant.MemoryBasisExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.AdvisedRequest;

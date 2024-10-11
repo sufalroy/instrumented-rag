@@ -31,7 +31,7 @@ public class ChatConfiguration {
         return new OpenAiChatModel(openAiApi,
                 OpenAiChatOptions.builder()
                         .withModel("llama3-70b-8192")
-                        .withTemperature(0.7F)
+                        .withTemperature(0.8F)
                         .build());
     }
 
@@ -45,6 +45,7 @@ public class ChatConfiguration {
         return new OllamaChatModel(ollamaApi(),
                 OllamaOptions.builder()
                         .withModel("gemma2:2b")
+                        .withTemperature(0.8F)
                         .build());
     }
 
@@ -53,6 +54,7 @@ public class ChatConfiguration {
         return new OllamaEmbeddingModel(ollamaApi(),
                 OllamaOptions.builder()
                         .withModel("gemma2:2b")
+                        .withTemperature(0.8F)
                         .build());
     }
 

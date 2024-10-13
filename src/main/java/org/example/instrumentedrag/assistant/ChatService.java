@@ -2,7 +2,9 @@ package org.example.instrumentedrag.assistant;
 
 import org.example.instrumentedrag.assistant.advisors.CaptureMemoryAdvisor;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.*;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -40,8 +42,6 @@ public class ChatService {
     ) {
         return chatClientForSession(conversationSession, documentId)
                 .prompt()
-                .advisors(advisorBuilder -> advisorBuilder.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationSession.getConversationId()))
-                .advisors(advisorBuilder -> advisorBuilder.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, 50))
                 .user(userMessage)
                 .stream()
                 .content();

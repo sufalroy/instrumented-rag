@@ -152,4 +152,9 @@ public class DocumentService {
                 .map(result -> UUID.fromString((String) result.getMetadata().get("documentId")))
                 .collect(Collectors.toSet());
     }
+
+    public UploadedDocument fetchUploadedDocument(String id) {
+        return this.uploadedDocumentRepository.findById(UUID.fromString(id))
+                .orElseThrow(ResourceNotFoundException::new);
+    }
 }

@@ -34,4 +34,10 @@ public class DocumentController {
     ) {
         return this.documentService.fetchUploadedDocuments(name, createdAfter, createdBefore, contentSearch);
     }
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UploadedDocument getDocument(@PathVariable String id) {
+        return this.documentService.fetchUploadedDocument(id);
+    }
 }
